@@ -1,4 +1,4 @@
-mod rules;
+pub mod rules;
 mod utils;
 
 use std::cmp::Ordering;

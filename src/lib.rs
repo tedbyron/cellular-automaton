@@ -1,10 +1,10 @@
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
 
-//! A cellular automaton simulator written in Rust and compiled to
-// `WebAssembly`.
+//! A cellular automaton simulation library with `WebAssembly` as a target.
 
-mod automaton;
-pub use automaton::Automaton;
+pub mod automaton;
+
+pub use automaton::{rules::Rules, Automaton};
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
