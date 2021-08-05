@@ -88,6 +88,7 @@ impl Automaton {
         }
         self.cells_step
             .resize_with(new_width * self.rows, Default::default);
+        self.cells_step.shrink_to_fit();
         self.cols = new_width;
         self.set_neighbor_deltas(new_width, self.rows);
     }
@@ -100,8 +101,10 @@ impl Automaton {
     pub fn resize_height(&mut self, new_height: usize) {
         self.cells
             .resize_with(self.cols * new_height, Default::default);
+        self.cells.shrink_to_fit();
         self.cells_step
             .resize_with(self.cols * new_height, Default::default);
+        self.cells_step.shrink_to_fit();
         self.rows = new_height;
         self.set_neighbor_deltas(self.cols, new_height);
     }
@@ -203,7 +206,7 @@ impl Automaton {
             match self
                 .cells
                 .get(self.index((row + delta[0]) % self.rows, (col + delta[1]) % self.cols))
-                .unwrap_or(&count)
+                .unwrap()
             {
                 1 => count + 1,
                 _ => count,
