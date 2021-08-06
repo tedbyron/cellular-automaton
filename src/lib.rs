@@ -2,9 +2,9 @@
 
 //! A cellular automaton simulation library with `WebAssembly` as a target.
 
-pub mod automaton;
+mod automaton;
 
-pub use automaton::{rules::Rules, Automaton};
+pub use automaton::{rules::*, Automaton};
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]

@@ -19,7 +19,7 @@ exclude = [
 crate-type = ["cdylib", "rlib"]
 
 [features]
-default = ["console_error_panic_hook"]
+default = ["console_error_panic_hook", "wee_alloc"]
 
 [dependencies]
 console_error_panic_hook = { version = "0", optional = true }
@@ -32,6 +32,6 @@ wee_alloc = { version = "0", optional = true }
 wasm-bindgen-test = "0"
 
 [profile.release]
-opt-level = 3
+opt-level = "s"
 codegen-units = 1
-lto = true
+lto = "fat"
