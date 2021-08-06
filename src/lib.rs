@@ -4,7 +4,7 @@
 
 mod automaton;
 
-pub use automaton::{rules::*, Automaton};
+pub use automaton::{ruleset::*, Automaton};
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]

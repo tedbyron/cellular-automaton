@@ -1,6 +1,6 @@
-pub mod rules;
+pub mod ruleset;
 
-use rules::RuleSet;
+use ruleset::RuleSet;
 use std::{cmp::Ordering, iter, mem};
 
 use wasm_bindgen::prelude::wasm_bindgen;
