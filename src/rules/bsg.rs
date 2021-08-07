@@ -15,7 +15,6 @@ cfg_if::cfg_if! {
             pub birth: BirthRule,
             #[wasm_bindgen(getter_with_clone)]
             pub survival: SurvivalRule,
-            #[wasm_bindgen(getter)]
             pub generation: GenerationRule,
         }
     } else {
