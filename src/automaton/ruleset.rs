@@ -14,7 +14,7 @@ pub type GenerationRule = u8;
 
 /// A ruleset consisting of survival, birth, and generation rules.
 #[wasm_bindgen]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct RuleSet {
     #[wasm_bindgen(getter_with_clone)]
     pub survival: SurvivalRule,
