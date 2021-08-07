@@ -5,7 +5,7 @@ use std::{cmp::Ordering, iter, mem};
 
 use wasm_bindgen::prelude::wasm_bindgen;
 
-/// A two-dimensional cellular automaton with a finite grid of cells.
+/// A two-dimensional cellular automaton with a finite number of cells.
 #[wasm_bindgen(inspectable)]
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Automaton {
