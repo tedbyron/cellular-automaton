@@ -19,18 +19,21 @@ exclude = [
 crate-type = ["cdylib", "rlib"]
 
 [features]
-default = ["console_error_panic_hook", "wee_alloc"]
+default = ["console_error_panic_hook", "wee_alloc", "wasm-bindgen"]
 
 [dependencies]
+cfg-if = "1.0.0"
 console_error_panic_hook = { version = "0.1.6", optional = true }
+# select feature based on target
+# https://github.com/rust-lang/cargo/issues/1197
 getrandom = { version = "0.2.3", features = ["js"] }
 # js-sys = "0.3.52"
 rand = "0.8.4"
-wasm-bindgen = "0.2.75"
+wasm-bindgen = { version = "0.2.75", optional = true }
 wee_alloc = { version = "0.4.5", optional = true }
 
 [dev-dependencies]
-wasm-bindgen-test = "0"
+wasm-bindgen-test = "0.3.25"
 
 [profile.release]
 opt-level = "s"

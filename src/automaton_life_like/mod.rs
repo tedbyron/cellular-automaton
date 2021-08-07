@@ -1,33 +1,34 @@
-pub mod ruleset;
+//! Life-like cellular automata.
 
-use ruleset::Ruleset;
+use crate::rules::bsg::Ruleset;
+
 use std::{cmp::Ordering, iter, mem};
-
+#[cfg(feature = "wasm-bindgen")]
 use wasm_bindgen::prelude::wasm_bindgen;
 
 /// A two-dimensional cellular automaton with a finite number of cells.
-#[wasm_bindgen(inspectable)]
+#[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(inspectable))]
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
-pub struct AutomatonLifeLike {
+pub struct Automaton {
     rows: usize,
     cols: usize,
-    cells: Vec<u8>,
-    cells_step: Vec<u8>,
+    cells: Vec<i8>,
+    cells_step: Vec<i8>,
     rules: Ruleset,
     neighbor_deltas: [[usize; 2]; 8],
 }
 
-#[wasm_bindgen]
-impl AutomatonLifeLike {
-    /// Constructs a new automaton with all cell states set to 0. Implements the
-    /// default ruleset of Conway's Game of Life.
+#[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
+impl Automaton {
+    /// Constructs a new automaton with all cell states set to 0. Defaults to rules
+    /// from Conway's Game of Life.
     ///
     /// # Examples
     ///
     /// ```
     /// todo!();
     /// ```
-    #[wasm_bindgen(constructor)]
+    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
     #[must_use]
     pub fn new(rows: usize, cols: usize) -> Self {
         #[cfg(feature = "console_error_panic_hook")]
@@ -65,7 +66,7 @@ impl AutomatonLifeLike {
     /// ```
     /// todo!();
     /// ```
-    #[wasm_bindgen(setter = cols, js_name = resizeWidth)]
+    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(setter = cols, js_name = resizeWidth))]
     pub fn resize_width(&mut self, width: usize) {
         match width.cmp(&self.cols) {
             Ordering::Greater => {
@@ -118,7 +119,7 @@ impl AutomatonLifeLike {
     /// ```
     /// todo!();
     /// ```
-    #[wasm_bindgen(setter = rows, js_name = resizeHeight)]
+    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(setter = rows, js_name = resizeHeight))]
     pub fn resize_height(&mut self, height: usize) {
         self.cells.resize_with(self.cols * height, Default::default);
         self.cells.shrink_to_fit();
@@ -136,9 +137,9 @@ impl AutomatonLifeLike {
     /// ```
     /// todo!();
     /// ```
-    #[wasm_bindgen(getter = cellsPtr, js_name = getCellsPtr)]
+    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = getCellsPtr))]
     #[must_use]
-    pub fn cells_ptr(&self) -> *const u8 {
+    pub fn cells_ptr(&self) -> *const i8 {
         self.cells.as_ptr()
     }
 
@@ -149,7 +150,7 @@ impl AutomatonLifeLike {
     /// ```
     /// todo!();
     /// ```
-    #[wasm_bindgen(js_name = toggleCell)]
+    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = toggleCell))]
     pub fn toggle_cell(&mut self, row: usize, col: usize) {
         let idx = self.index(row, col);
         if let Some(cell) = self.cells.get_mut(idx) {
@@ -170,7 +171,7 @@ impl AutomatonLifeLike {
     /// ```
     /// todo!();
     /// ```
-    #[wasm_bindgen(js_name = setCellsOn)]
+    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = setCellsOn))]
     pub fn set_cells_on(&mut self, locations: &[usize]) {
         for (&row, &col) in locations
             .iter()
@@ -193,8 +194,8 @@ impl AutomatonLifeLike {
     /// ```
     /// todo!();
     /// ```
-    #[wasm_bindgen(js_name = setAllCells)]
-    pub fn set_all_cells(&mut self, n: u8) {
+    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = setAllCells))]
+    pub fn set_all_cells(&mut self, n: i8) {
         if n <= self.rules.generation {
             self.cells.fill(n);
         }
@@ -209,7 +210,7 @@ impl AutomatonLifeLike {
     /// ```
     /// todo!();
     /// ```
-    #[wasm_bindgen(js_name = randomizeCells)]
+    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = randomizeCells))]
     pub fn randomize_cells(&mut self, n: f64) {
         for cell in &mut self.cells {
             *cell = if rand::random::<f64>() < n / 100.0 {
@@ -218,52 +219,6 @@ impl AutomatonLifeLike {
                 0
             };
         }
-    }
-
-    /// Sets all three cell state rules to different values.
-    ///
-    /// # Examples
-    /// ```
-    /// todo!();
-    /// ```
-    #[wasm_bindgen(js_name = setRules)]
-    pub fn set_rules(&mut self, b: &[u8], s: &[u8], c: u8) {
-        self.rules.birth = b.to_vec();
-        self.rules.survival = s.to_vec();
-        self.rules.generation = c;
-    }
-
-    /// Sets the cell birth rule to a different value.
-    ///
-    /// # Examples
-    /// ```
-    /// todo!();
-    /// ```
-    #[wasm_bindgen(setter = birthRule, js_name = setBirthRule)]
-    pub fn set_birth_rule(&mut self, b: &[u8]) {
-        self.rules.birth = b.to_vec();
-    }
-
-    /// Sets the cell survival rule to a different value.
-    ///
-    /// # Examples
-    /// ```
-    /// todo!();
-    /// ```
-    #[wasm_bindgen(setter = survivalRule, js_name = setSurvivalRule)]
-    pub fn set_survival_rule(&mut self, s: &[u8]) {
-        self.rules.survival = s.to_vec();
-    }
-
-    /// Sets the cell generation rule to a different value.
-    ///
-    /// # Examples
-    /// ```
-    /// todo!();
-    /// ```
-    #[wasm_bindgen(setter = generationRule, js_name = setGenerationRule)]
-    pub fn set_generation_rule(&mut self, c: u8) {
-        self.rules.generation = c - 1;
     }
 
     /// Calculates and the state of all cells in the automaton after `n` generations
@@ -297,7 +252,7 @@ impl AutomatonLifeLike {
     }
 
     // Returns the count of a cell's live, first-generation neighbors.
-    fn neighbors(&self, row: usize, col: usize) -> u8 {
+    fn neighbors(&self, row: usize, col: usize) -> i8 {
         self.neighbor_deltas
             .iter()
             .fold(0, |count, &[row_delta, col_delta]| {
@@ -325,117 +280,5 @@ impl AutomatonLifeLike {
             [1, 0],
             [1, 1],
         ];
-    }
-}
-
-#[cfg(test)]
-// flatten a slice of tuples that contain (x, y) locations of cells
-fn flatten_locations(locations: &[(usize, usize)]) -> Vec<usize> {
-    locations
-        .iter()
-        .flat_map(|&(x, y)| iter::once(x).chain(iter::once(y)))
-        .collect()
-}
-
-#[cfg(test)]
-// build an automaton with width, height, and locations of live cells
-fn build_automaton(width: usize, height: usize, locations: &[(usize, usize)]) -> AutomatonLifeLike {
-    let mut a = AutomatonLifeLike::new(width, height);
-    a.set_cells_on(&flatten_locations(locations));
-    a
-}
-
-#[cfg(test)]
-pub mod tests {
-    use super::{build_automaton, flatten_locations, AutomatonLifeLike};
-    use wasm_bindgen_test::wasm_bindgen_test;
-
-    #[wasm_bindgen_test]
-    fn automaton_new() {
-        let a = AutomatonLifeLike::new(64, 64);
-        assert_eq!(a.cells, vec![0; 64 * 64]);
-    }
-
-    #[wasm_bindgen_test]
-    fn automaton_set_cells_on() {
-        let mut a = AutomatonLifeLike::new(3, 3);
-        a.set_cells_on(&flatten_locations(&[
-            (0, 0),
-            (0, 1),
-            (0, 2),
-            (1, 0),
-            (1, 1),
-            (1, 2),
-            (2, 0),
-            (2, 1),
-            (2, 2),
-        ]));
-        assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1, 1, 1, 1]);
-    }
-
-    #[wasm_bindgen_test]
-    fn automaton_new_rect() {
-        let mut a = AutomatonLifeLike::new(2, 3);
-        a.set_cells_on(&flatten_locations(&[(1, 1)]));
-        assert_eq!(a.cells, vec![0, 0, 0, 0, 1, 0]);
-    }
-
-    #[wasm_bindgen_test]
-    fn automaton_set_all_cells() {
-        let mut a = AutomatonLifeLike::new(3, 3);
-        a.set_all_cells(1);
-        assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1, 1, 1, 1]);
-        a.set_all_cells(0);
-        assert_eq!(a.cells, vec![0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    }
-
-    #[wasm_bindgen_test]
-    fn automaton_resize_width_larger() {
-        let mut a = AutomatonLifeLike::new(3, 3);
-        a.set_all_cells(1);
-        a.resize_width(5);
-        assert_eq!(a.cells, vec![1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0]);
-    }
-
-    #[wasm_bindgen_test]
-    fn automaton_resize_width_smaller() {
-        let mut a = AutomatonLifeLike::new(3, 3);
-        a.set_all_cells(1);
-        a.resize_width(2);
-        assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1]);
-    }
-
-    #[wasm_bindgen_test]
-    fn automaton_resize_height_larger() {
-        let mut a = AutomatonLifeLike::new(3, 3);
-        a.set_all_cells(1);
-        a.resize_height(5);
-        assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]);
-    }
-
-    #[wasm_bindgen_test]
-    fn automaton_resize_height_smaller() {
-        let mut a = AutomatonLifeLike::new(3, 3);
-        a.set_all_cells(1);
-        a.resize_height(2);
-        assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1]);
-    }
-
-    #[wasm_bindgen_test]
-    fn automaton_wrapping() {
-        let mut a = build_automaton(2, 2, &[(0, 0), (0, 1)]);
-        let a_1 = build_automaton(2, 2, &[(0, 0), (0, 1)]);
-
-        a.step(1);
-        assert_eq!(a.cells, a_1.cells);
-    }
-
-    #[wasm_bindgen_test]
-    fn automaton_step() {
-        let mut a = build_automaton(6, 6, &[(1, 2), (2, 3), (3, 1), (3, 2), (3, 3)]);
-        let a_1 = build_automaton(6, 6, &[(2, 1), (2, 3), (3, 2), (3, 3), (4, 2)]);
-
-        a.step(1);
-        assert_eq!(a.cells, a_1.cells);
     }
 }
