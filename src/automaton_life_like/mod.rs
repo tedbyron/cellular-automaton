@@ -1,6 +1,6 @@
 pub mod ruleset;
 
-use ruleset::RuleSet;
+use ruleset::Ruleset;
 use std::{cmp::Ordering, iter, mem};
 
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -8,18 +8,19 @@ use wasm_bindgen::prelude::wasm_bindgen;
 /// A two-dimensional cellular automaton with a finite number of cells.
 #[wasm_bindgen(inspectable)]
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
-pub struct Automaton {
+pub struct AutomatonLifeLike {
     rows: usize,
     cols: usize,
     cells: Vec<u8>,
     cells_step: Vec<u8>,
-    rules: RuleSet,
+    rules: Ruleset,
     neighbor_deltas: [[usize; 2]; 8],
 }
 
 #[wasm_bindgen]
-impl Automaton {
-    /// Constructs a new automaton with all cell states set to 0.
+impl AutomatonLifeLike {
+    /// Constructs a new automaton with all cell states set to 0. Implements the
+    /// default ruleset of Conway's Game of Life.
     ///
     /// # Examples
     ///
@@ -48,7 +49,7 @@ impl Automaton {
             cols,
             cells: vec![0; cols * rows],
             cells_step: vec![0; cols * rows],
-            rules: RuleSet::default(),
+            rules: Ruleset::default(),
             neighbor_deltas,
         }
     }
@@ -226,21 +227,10 @@ impl Automaton {
     /// todo!();
     /// ```
     #[wasm_bindgen(js_name = setRules)]
-    pub fn set_rules(&mut self, s: &[u8], b: &[u8], c: u8) {
-        self.rules.survival = s.to_vec();
+    pub fn set_rules(&mut self, b: &[u8], s: &[u8], c: u8) {
         self.rules.birth = b.to_vec();
-        self.rules.generation = c;
-    }
-
-    /// Sets the cell survival rule to a different value.
-    ///
-    /// # Examples
-    /// ```
-    /// todo!();
-    /// ```
-    #[wasm_bindgen(setter = survivalRule, js_name = setSurvivalRule)]
-    pub fn set_survival_rule(&mut self, s: &[u8]) {
         self.rules.survival = s.to_vec();
+        self.rules.generation = c;
     }
 
     /// Sets the cell birth rule to a different value.
@@ -252,6 +242,17 @@ impl Automaton {
     #[wasm_bindgen(setter = birthRule, js_name = setBirthRule)]
     pub fn set_birth_rule(&mut self, b: &[u8]) {
         self.rules.birth = b.to_vec();
+    }
+
+    /// Sets the cell survival rule to a different value.
+    ///
+    /// # Examples
+    /// ```
+    /// todo!();
+    /// ```
+    #[wasm_bindgen(setter = survivalRule, js_name = setSurvivalRule)]
+    pub fn set_survival_rule(&mut self, s: &[u8]) {
+        self.rules.survival = s.to_vec();
     }
 
     /// Sets the cell generation rule to a different value.
@@ -338,26 +339,26 @@ fn flatten_locations(locations: &[(usize, usize)]) -> Vec<usize> {
 
 #[cfg(test)]
 // build an automaton with width, height, and locations of live cells
-fn build_automaton(width: usize, height: usize, locations: &[(usize, usize)]) -> Automaton {
-    let mut a = Automaton::new(width, height);
+fn build_automaton(width: usize, height: usize, locations: &[(usize, usize)]) -> AutomatonLifeLike {
+    let mut a = AutomatonLifeLike::new(width, height);
     a.set_cells_on(&flatten_locations(locations));
     a
 }
 
 #[cfg(test)]
 pub mod tests {
-    use super::{build_automaton, flatten_locations, Automaton};
+    use super::{build_automaton, flatten_locations, AutomatonLifeLike};
     use wasm_bindgen_test::wasm_bindgen_test;
 
     #[wasm_bindgen_test]
     fn automaton_new() {
-        let a = Automaton::new(64, 64);
+        let a = AutomatonLifeLike::new(64, 64);
         assert_eq!(a.cells, vec![0; 64 * 64]);
     }
 
     #[wasm_bindgen_test]
     fn automaton_set_cells_on() {
-        let mut a = Automaton::new(3, 3);
+        let mut a = AutomatonLifeLike::new(3, 3);
         a.set_cells_on(&flatten_locations(&[
             (0, 0),
             (0, 1),
@@ -374,14 +375,14 @@ pub mod tests {
 
     #[wasm_bindgen_test]
     fn automaton_new_rect() {
-        let mut a = Automaton::new(2, 3);
+        let mut a = AutomatonLifeLike::new(2, 3);
         a.set_cells_on(&flatten_locations(&[(1, 1)]));
         assert_eq!(a.cells, vec![0, 0, 0, 0, 1, 0]);
     }
 
     #[wasm_bindgen_test]
     fn automaton_set_all_cells() {
-        let mut a = Automaton::new(3, 3);
+        let mut a = AutomatonLifeLike::new(3, 3);
         a.set_all_cells(1);
         assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1, 1, 1, 1]);
         a.set_all_cells(0);
@@ -390,7 +391,7 @@ pub mod tests {
 
     #[wasm_bindgen_test]
     fn automaton_resize_width_larger() {
-        let mut a = Automaton::new(3, 3);
+        let mut a = AutomatonLifeLike::new(3, 3);
         a.set_all_cells(1);
         a.resize_width(5);
         assert_eq!(a.cells, vec![1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0]);
@@ -398,7 +399,7 @@ pub mod tests {
 
     #[wasm_bindgen_test]
     fn automaton_resize_width_smaller() {
-        let mut a = Automaton::new(3, 3);
+        let mut a = AutomatonLifeLike::new(3, 3);
         a.set_all_cells(1);
         a.resize_width(2);
         assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1]);
@@ -406,7 +407,7 @@ pub mod tests {
 
     #[wasm_bindgen_test]
     fn automaton_resize_height_larger() {
-        let mut a = Automaton::new(3, 3);
+        let mut a = AutomatonLifeLike::new(3, 3);
         a.set_all_cells(1);
         a.resize_height(5);
         assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]);
@@ -414,7 +415,7 @@ pub mod tests {
 
     #[wasm_bindgen_test]
     fn automaton_resize_height_smaller() {
-        let mut a = Automaton::new(3, 3);
+        let mut a = AutomatonLifeLike::new(3, 3);
         a.set_all_cells(1);
         a.resize_height(2);
         assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1]);
