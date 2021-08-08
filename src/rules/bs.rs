@@ -1,33 +1,33 @@
-//! A ruleset containing birth and survival rules (B/S notation).
-
-use super::{BirthRule, SurvivalRule};
+use super::{BirthRule, GenerationRule, SurvivalRule};
 
 #[cfg(feature = "wasm-bindgen")]
 use wasm_bindgen::prelude::wasm_bindgen;
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "wasm-bindgen")] {
-        /// A ruleset containing birth and survival rules.
+        /// A ruleset containing birth and survival (B/S) rules.
         #[wasm_bindgen]
         #[derive(Clone, Debug, PartialEq, PartialOrd)]
-        pub struct Ruleset {
+        pub struct RulesetBS {
             #[wasm_bindgen(getter_with_clone)]
             pub birth: BirthRule,
             #[wasm_bindgen(getter_with_clone)]
             pub survival: SurvivalRule,
+            generation: GenerationRule,
         }
     } else {
-        /// A ruleset containing birth and survival rules.
+        /// A ruleset containing birth and survival (B/S) rules.
         #[derive(Clone, Debug, PartialEq, PartialOrd)]
-        pub struct Ruleset {
+        pub struct RulesetBS {
             pub birth: BirthRule,
             pub survival: SurvivalRule,
+            generation: GenerationRule,
         }
     }
 }
 
 #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
-impl Ruleset {
+impl RulesetBS {
     /// Constructs a new ruleset containing birth, survival, and generation rules.
     ///
     /// # Examples
@@ -44,6 +44,7 @@ impl Ruleset {
         Self {
             birth: b.to_vec(),
             survival: s.to_vec(),
+            generation: 1,
         }
     }
 
@@ -76,12 +77,13 @@ impl Ruleset {
     }
 }
 
-impl Default for Ruleset {
+impl Default for RulesetBS {
     /// Rules from Conway's Game of Life.
     fn default() -> Self {
         Self {
             birth: vec![3],
             survival: vec![2, 3],
+            generation: 1,
         }
     }
 }

@@ -1,5 +1,3 @@
-//! A ruleset containing birth, survival, and generation rules (B/S/C notation).
-
 use super::{BirthRule, GenerationRule, SurvivalRule};
 
 #[cfg(feature = "wasm-bindgen")]
@@ -7,10 +5,10 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "wasm-bindgen")] {
-        /// A ruleset containing birth, survival, and generation rules.
+        /// A ruleset containing birth, survival, and generation (B/S/C) rules.
         #[wasm_bindgen]
         #[derive(Clone, Debug, PartialEq, PartialOrd)]
-        pub struct Ruleset {
+        pub struct RulesetBSC {
             #[wasm_bindgen(getter_with_clone)]
             pub birth: BirthRule,
             #[wasm_bindgen(getter_with_clone)]
@@ -18,9 +16,9 @@ cfg_if::cfg_if! {
             pub generation: GenerationRule,
         }
     } else {
-        /// A ruleset containing birth, survival, and generation rules.
+        /// A ruleset containing birth, survival, and generation (B/S/C) rules.
         #[derive(Clone, Debug, PartialEq, PartialOrd)]
-        pub struct Ruleset {
+        pub struct RulesetBSC {
             pub birth: BirthRule,
             pub survival: SurvivalRule,
             pub generation: GenerationRule,
@@ -29,7 +27,7 @@ cfg_if::cfg_if! {
 }
 
 #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
-impl Ruleset {
+impl RulesetBSC {
     /// Constructs a new ruleset containing birth, survival, and generation rules.
     ///
     /// # Examples
@@ -116,7 +114,7 @@ impl Ruleset {
     // pub fn parse(s: &str) {}
 }
 
-impl Default for Ruleset {
+impl Default for RulesetBSC {
     /// Rules from Conway's Game of Life.
     fn default() -> Self {
         Self {

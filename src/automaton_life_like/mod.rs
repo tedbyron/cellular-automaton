@@ -1,6 +1,6 @@
 //! Life-like cellular automata.
 
-use crate::rules::bsg::Ruleset;
+use crate::rules::RulesetBSC;
 
 use std::{cmp::Ordering, iter, mem};
 #[cfg(feature = "wasm-bindgen")]
@@ -14,7 +14,7 @@ pub struct Automaton {
     cols: usize,
     cells: Vec<i8>,
     cells_step: Vec<i8>,
-    rules: Ruleset,
+    rules: RulesetBSC,
     neighbor_deltas: [[usize; 2]; 8],
 }
 
@@ -50,7 +50,7 @@ impl Automaton {
             cols,
             cells: vec![0; cols * rows],
             cells_step: vec![0; cols * rows],
-            rules: Ruleset::default(),
+            rules: RulesetBSC::default(),
             neighbor_deltas,
         }
     }

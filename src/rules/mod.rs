@@ -1,7 +1,9 @@
 //! Rulesets for cellular automata.
 
-pub mod bs;
-pub mod bsg;
+mod bs;
+mod bsc;
 mod types;
 
+pub use bs::*;
+pub use bsc::*;
 pub use types::*;
