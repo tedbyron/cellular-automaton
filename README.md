@@ -2,7 +2,7 @@
   <h1><code>cellular-automaton</code></h1>
 
   <p>
-    <strong>A cellular automaton simulation library with WebAssembly as its target.</strong>
+    <strong>A cellular automaton simulation library targeting WebAssembly.</strong>
   </p>
 
   <p>
