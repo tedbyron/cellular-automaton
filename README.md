@@ -35,8 +35,6 @@ This crate defaults to supporting WebAssembly. To build the crate without WebAss
 cargo build --no-default-features
 ```
 
-> Note: unit tests are run by `wasm-bindgen-test`, which is a dev-dependency and will still be installed without default features.
-
 ## [JavaScript Package](https://www.npmjs.com/package/@tedbyron/cellular-automaton)
 
 ```sh
@@ -54,7 +52,7 @@ The npm package has:
 
 -   A 60kb WASM binary
 -   No dependencies
--   JavaScript bindings to the WASM library
+-   JavaScript bindings to the WASM binary
 -   TypeScript definitions
 
 The package is built to target [`webpack`](https://webpack.js.org/) (`--target bundler`) but can be rebuilt from the Rust library for a different target:
