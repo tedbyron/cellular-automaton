@@ -29,10 +29,10 @@
 cellular-automaton = "0.1"
 ```
 
-This crate defaults to supporting WebAssembly. To build the crate without WebAssembly support, don't use the crate's default features:
+This crate defaults to supporting WebAssembly. To build the crate without WebAssembly support, don't use the crate's default features and build to a specific target:
 
 ```sh
-cargo build --no-default-features
+cargo build --no-default-features --target x86_64-unknown-linux-gnu
 ```
 
 ## [JavaScript Package](https://www.npmjs.com/package/@tedbyron/cellular-automaton)
