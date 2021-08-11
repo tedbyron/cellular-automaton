@@ -35,17 +35,17 @@ This crate defaults to supporting WebAssembly. To build the crate without WebAss
 cargo build --no-default-features --target x86_64-unknown-linux-gnu
 ```
 
-## [JavaScript Package](https://www.npmjs.com/package/@tedbyron/cellular-automaton)
+## [JavaScript Package](https://www.npmjs.com/package/@tedbyron/ca)
 
 ```sh
 # npm
-npm i @tedbyron/cellular-automaton
+npm i @tedbyron/ca
 
 # yarn
-yarn add @tedbyron/cellular-automaton
+yarn add @tedbyron/ca
 
 # pnpm
-pnpm add @tedbyron/cellular-automaton
+pnpm add @tedbyron/ca
 ```
 
 The npm package has:
