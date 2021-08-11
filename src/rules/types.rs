@@ -1,7 +1,7 @@
 //! Types of rules for cellular automata.
 
-/// A list containing values that represent the number of live, first-generation
-/// neighbors that must exist for a dead cell to come to life.
+/// A list containing values that represent the number of state-1 neighbors that
+/// must exist for a state-0 (dead) cell to be born.
 ///
 /// # Examples
 ///
@@ -12,8 +12,8 @@
 /// ```
 pub type BirthRule = Vec<i8>;
 
-/// A list containing values that represent the number of live, first-generation
-/// neighbors that must exist for a live, first-generation cell to remain alive.
+/// A list containing values that represent the number of state-1 neighbors that
+/// must exist for a state-1 cell to remain in state-1.
 ///
 /// # Examples
 ///
@@ -23,7 +23,7 @@ pub type BirthRule = Vec<i8>;
 /// ```
 pub type SurvivalRule = Vec<i8>;
 
-/// The maximum value that a cell can have.
+/// The number of possible cell states.
 ///
 /// # Examples
 ///

@@ -2,8 +2,15 @@
 
 //! A cellular automaton simulation library targeting `WebAssembly`.
 
-pub mod automaton_life_like;
-pub mod rules;
+mod automaton_life_like;
+mod rules;
+
+pub use automaton_life_like::Automaton;
+pub use rules::{
+    bs::RulesetBS,
+    bsc::RulesetBSC,
+    types::{BirthRule, GenerationRule, SurvivalRule},
+};
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]

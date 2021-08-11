@@ -1,0 +1,37 @@
+/* tslint:disable */
+/* eslint-disable */
+export const memory: WebAssembly.Memory;
+export function __wbg_automaton_free(a: number): void;
+export function automaton_new(a: number, b: number): number;
+export function automaton_set_resizeWidth(a: number, b: number): void;
+export function automaton_set_resizeHeight(a: number, b: number): void;
+export function automaton_getCellsPtr(a: number): number;
+export function automaton_toggleCell(a: number, b: number, c: number): void;
+export function automaton_setCellsOn(a: number, b: number, c: number): void;
+export function automaton_setAllCells(a: number, b: number): void;
+export function automaton_randomizeCells(a: number, b: number): void;
+export function automaton_step(a: number, b: number): void;
+export function __wbg_rulesetbs_free(a: number): void;
+export function __wbg_get_rulesetbs_birth(a: number, b: number): void;
+export function __wbg_set_rulesetbs_birth(a: number, b: number, c: number): void;
+export function __wbg_get_rulesetbs_survival(a: number, b: number): void;
+export function __wbg_set_rulesetbs_survival(a: number, b: number, c: number): void;
+export function rulesetbs_new(a: number, b: number, c: number, d: number): number;
+export function rulesetbs_set_setBirthRule(a: number, b: number, c: number): void;
+export function rulesetbs_set_setSurvivalRule(a: number, b: number, c: number): void;
+export function __wbg_rulesetbsc_free(a: number): void;
+export function __wbg_get_rulesetbsc_birth(a: number, b: number): void;
+export function __wbg_set_rulesetbsc_birth(a: number, b: number, c: number): void;
+export function __wbg_get_rulesetbsc_survival(a: number, b: number): void;
+export function __wbg_set_rulesetbsc_survival(a: number, b: number, c: number): void;
+export function __wbg_get_rulesetbsc_generation(a: number): number;
+export function __wbg_set_rulesetbsc_generation(a: number, b: number): void;
+export function rulesetbsc_new(a: number, b: number, c: number, d: number, e: number): number;
+export function rulesetbsc_set_setBirthRule(a: number, b: number, c: number): void;
+export function rulesetbsc_set_setSurvivalRule(a: number, b: number, c: number): void;
+export function rulesetbsc_set_setGenerationRule(a: number, b: number): void;
+export function __wbindgen_malloc(a: number): number;
+export function __wbindgen_add_to_stack_pointer(a: number): number;
+export function __wbindgen_free(a: number, b: number): void;
+export function __wbindgen_exn_store(a: number): void;
+export function __wbindgen_realloc(a: number, b: number, c: number): number;

@@ -1,4 +1,4 @@
-use super::{BirthRule, GenerationRule, SurvivalRule};
+use super::types::{BirthRule, GenerationRule, SurvivalRule};
 
 #[cfg(feature = "wasm-bindgen")]
 use wasm_bindgen::prelude::wasm_bindgen;
