@@ -12,8 +12,8 @@
   </p>
 
   <p>
-    <a href="https://www.npmjs.com/package/@tedbyron/cellular-automaton"><img alt="npm version (scoped)" src="https://img.shields.io/npm/v/@tedbyron/cellular-automaton?style=flat-square&logo=npm"></a>
-    <a href="https://www.npmjs.com/package/@tedbyron/cellular-automaton"><img alt="npm type definitions" src="https://img.shields.io/npm/types/@tedbyron/cellular-automaton?style=flat-square"></a>
+    <a href="https://www.npmjs.com/package/@tedbyron/cellular-automaton"><img alt="npm version (scoped)" src="https://img.shields.io/npm/v/@tedbyron/ca?style=flat-square&logo=npm"></a>
+    <a href="https://www.npmjs.com/package/@tedbyron/cellular-automaton"><img alt="npm type definitions" src="https://img.shields.io/npm/types/@tedbyron/ca?style=flat-square"></a>
   </p>
 
   <h3>
