@@ -502,7 +502,7 @@ export class RulesetBSC {
     get birth() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_rulesetbsc_birth(retptr, this.ptr);
+            wasm.__wbg_get_rulesetbs_birth(retptr, this.ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v0 = getArrayI8FromWasm0(r0, r1).slice();
@@ -518,7 +518,7 @@ export class RulesetBSC {
     set birth(arg0) {
         var ptr0 = passArray8ToWasm0(arg0, wasm.__wbindgen_malloc);
         var len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_rulesetbsc_birth(this.ptr, ptr0, len0);
+        wasm.__wbg_set_rulesetbs_birth(this.ptr, ptr0, len0);
     }
     /**
     * @returns {Int8Array}
@@ -526,7 +526,7 @@ export class RulesetBSC {
     get survival() {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.__wbg_get_rulesetbsc_survival(retptr, this.ptr);
+            wasm.__wbg_get_rulesetbs_survival(retptr, this.ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v0 = getArrayI8FromWasm0(r0, r1).slice();
@@ -542,7 +542,7 @@ export class RulesetBSC {
     set survival(arg0) {
         var ptr0 = passArray8ToWasm0(arg0, wasm.__wbindgen_malloc);
         var len0 = WASM_VECTOR_LEN;
-        wasm.__wbg_set_rulesetbsc_survival(this.ptr, ptr0, len0);
+        wasm.__wbg_set_rulesetbs_survival(this.ptr, ptr0, len0);
     }
     /**
     * @returns {number}
@@ -590,7 +590,7 @@ export class RulesetBSC {
     set setBirthRule(b) {
         var ptr0 = passArray8ToWasm0(b, wasm.__wbindgen_malloc);
         var len0 = WASM_VECTOR_LEN;
-        wasm.rulesetbsc_set_setBirthRule(this.ptr, ptr0, len0);
+        wasm.rulesetbs_set_setBirthRule(this.ptr, ptr0, len0);
     }
     /**
     * Sets the survival rule.
@@ -605,7 +605,7 @@ export class RulesetBSC {
     set setSurvivalRule(s) {
         var ptr0 = passArray8ToWasm0(s, wasm.__wbindgen_malloc);
         var len0 = WASM_VECTOR_LEN;
-        wasm.rulesetbsc_set_setSurvivalRule(this.ptr, ptr0, len0);
+        wasm.rulesetbs_set_setSurvivalRule(this.ptr, ptr0, len0);
     }
     /**
     * Sets the generation rule.
@@ -670,11 +670,6 @@ export function __wbg_modulerequire_3440a4bcf44437db() { return handleError(func
     return addHeapObject(ret);
 }, arguments) };
 
-export function __wbindgen_object_clone_ref(arg0) {
-    var ret = getObject(arg0);
-    return addHeapObject(ret);
-};
-
 export function __wbg_newnoargs_68424965d85fcb08(arg0, arg1) {
     var ret = new Function(getStringFromWasm0(arg0, arg1));
     return addHeapObject(ret);
@@ -684,6 +679,11 @@ export function __wbg_call_9698e9b9c4668ae0() { return handleError(function (arg
     var ret = getObject(arg0).call(getObject(arg1));
     return addHeapObject(ret);
 }, arguments) };
+
+export function __wbindgen_object_clone_ref(arg0) {
+    var ret = getObject(arg0);
+    return addHeapObject(ret);
+};
 
 export function __wbg_buffer_eb2155f17856c20b(arg0) {
     var ret = getObject(arg0).buffer;
@@ -715,6 +715,11 @@ export function __wbindgen_is_undefined(arg0) {
     return ret;
 };
 
+export function __wbg_length_0b194abde938d0c6(arg0) {
+    var ret = getObject(arg0).length;
+    return ret;
+};
+
 export function __wbg_new_ff8b26f7b2d7e2fb(arg0) {
     var ret = new Uint8Array(getObject(arg0));
     return addHeapObject(ret);
@@ -722,11 +727,6 @@ export function __wbg_new_ff8b26f7b2d7e2fb(arg0) {
 
 export function __wbg_set_67cdd115b9cb141f(arg0, arg1, arg2) {
     getObject(arg0).set(getObject(arg1), arg2 >>> 0);
-};
-
-export function __wbg_length_0b194abde938d0c6(arg0) {
-    var ret = getObject(arg0).length;
-    return ret;
 };
 
 export function __wbg_newwithlength_a49b32b2030b93c3(arg0) {
