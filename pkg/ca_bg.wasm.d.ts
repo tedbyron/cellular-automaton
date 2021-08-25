@@ -2,6 +2,8 @@
 /* eslint-disable */
 export const memory: WebAssembly.Memory;
 export function __wbg_automaton_free(a: number): void;
+export function __wbg_get_automaton_rules(a: number): number;
+export function __wbg_set_automaton_rules(a: number, b: number): void;
 export function automaton_new(a: number, b: number): number;
 export function automaton_set_resizeWidth(a: number, b: number): void;
 export function automaton_set_resizeHeight(a: number, b: number): void;

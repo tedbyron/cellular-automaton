@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-* A two-dimensional cellular automaton with a finite number of cells.
+*r" A two-dimensional cellular automaton with a finite number of cells.
 */
 export class Automaton {
   free(): void;
@@ -121,6 +121,10 @@ export class Automaton {
 * @param {number} height
 */
   rows: number;
+/**
+* @returns {RulesetBSC}
+*/
+  rules: RulesetBSC;
 }
 /**
 *r" A ruleset containing birth and survival (B/S) rules.

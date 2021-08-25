@@ -47,6 +47,13 @@ function getStringFromWasm0(ptr, len) {
     return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
 }
 
+function _assertClass(instance, klass) {
+    if (!(instance instanceof klass)) {
+        throw new Error(`expected instance of ${klass.name}`);
+    }
+    return instance.ptr;
+}
+
 let cachegetUint32Memory0 = null;
 function getUint32Memory0() {
     if (cachegetUint32Memory0 === null || cachegetUint32Memory0.buffer !== wasm.memory.buffer) {
@@ -158,7 +165,7 @@ function passStringToWasm0(arg, malloc, realloc) {
     return ptr;
 }
 /**
-* A two-dimensional cellular automaton with a finite number of cells.
+*r" A two-dimensional cellular automaton with a finite number of cells.
 */
 export class Automaton {
 
@@ -171,6 +178,7 @@ export class Automaton {
 
     toJSON() {
         return {
+            rules: this.rules,
         };
     }
 
@@ -188,6 +196,22 @@ export class Automaton {
     free() {
         const ptr = this.__destroy_into_raw();
         wasm.__wbg_automaton_free(ptr);
+    }
+    /**
+    * @returns {RulesetBSC}
+    */
+    get rules() {
+        var ret = wasm.__wbg_get_automaton_rules(this.ptr);
+        return RulesetBSC.__wrap(ret);
+    }
+    /**
+    * @param {RulesetBSC} arg0
+    */
+    set rules(arg0) {
+        _assertClass(arg0, RulesetBSC);
+        var ptr0 = arg0.ptr;
+        arg0.ptr = 0;
+        wasm.__wbg_set_automaton_rules(this.ptr, ptr0);
     }
     /**
     * Constructs a new automaton with all cell states set to 0. Defaults to rules

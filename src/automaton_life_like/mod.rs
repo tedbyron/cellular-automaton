@@ -6,16 +6,32 @@ use std::{cmp::Ordering, iter, mem};
 #[cfg(feature = "wasm-bindgen")]
 use wasm_bindgen::prelude::wasm_bindgen;
 
-/// A two-dimensional cellular automaton with a finite number of cells.
-#[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(inspectable))]
-#[derive(Clone, Debug, PartialEq, PartialOrd)]
-pub struct Automaton {
-    rows: usize,
-    cols: usize,
-    cells: Vec<i8>,
-    cells_step: Vec<i8>,
-    rules: RulesetBSC,
-    neighbor_deltas: [[usize; 2]; 8],
+cfg_if::cfg_if! {
+    if #[cfg(feature = "wasm-bindgen")] {
+        /// A two-dimensional cellular automaton with a finite number of cells.
+        #[wasm_bindgen(inspectable)]
+        #[derive(Clone, Debug, PartialEq, PartialOrd)]
+        pub struct Automaton {
+            rows: usize,
+            cols: usize,
+            cells: Vec<i8>,
+            cells_step: Vec<i8>,
+            #[wasm_bindgen(getter_with_clone)]
+            pub rules: RulesetBSC,
+            neighbor_deltas: [[usize; 2]; 8],
+        }
+    } else {
+        /// A two-dimensional cellular automaton with a finite number of cells.
+        #[derive(Clone, Debug, PartialEq, PartialOrd)]
+        pub struct Automaton {
+            rows: usize,
+            cols: usize,
+            cells: Vec<i8>,
+            cells_step: Vec<i8>,
+            pub rules: RulesetBSC,
+            neighbor_deltas: [[usize; 2]; 8],
+        }
+    }
 }
 
 #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
