@@ -4,6 +4,7 @@ red="\033[0;31m"
 green="\033[0;32m"
 nc="\033[0m"
 commands=(
+    "sed"
     "wasm-pack"
     "wasm-opt"
 )
