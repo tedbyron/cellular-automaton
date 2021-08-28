@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cargo publish --dry-run
-wasm-pack publish --access public --dry-run
+cargo publish
+wasm-pack publish --access public
