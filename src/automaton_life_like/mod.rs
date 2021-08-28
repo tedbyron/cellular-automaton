@@ -1,10 +1,10 @@
 //! Life-like cellular automata.
 
-use super::rules::bsc::RulesetBSC;
-
 use std::{cmp::Ordering, iter, mem};
 #[cfg(feature = "wasm-bindgen")]
 use wasm_bindgen::prelude::wasm_bindgen;
+
+use super::rules::bsc::RulesetBSC;
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "wasm-bindgen")] {
@@ -299,10 +299,12 @@ impl Automaton {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, target_arch = "wasm32"))]
 mod tests {
     use super::*;
-    use wasm_bindgen_test::wasm_bindgen_test;
+    use wasm_bindgen_test::{wasm_bindgen_test, wasm_bindgen_test_configure};
+
+    wasm_bindgen_test_configure!(run_in_browser);
 
     // flatten a slice of tuples that contain (x, y) locations of cells
     fn flatten_locations(locations: &[(usize, usize)]) -> Vec<usize> {

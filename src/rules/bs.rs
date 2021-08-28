@@ -1,7 +1,7 @@
-use super::types::{BirthRule, GenerationRule, SurvivalRule};
-
 #[cfg(feature = "wasm-bindgen")]
 use wasm_bindgen::prelude::wasm_bindgen;
+
+use super::types::{BirthRule, GenerationRule, SurvivalRule};
 
 cfg_if::cfg_if! {
     if #[cfg(feature = "wasm-bindgen")] {

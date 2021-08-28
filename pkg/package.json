@@ -4,7 +4,7 @@
     "Teddy Byron <ted@tedbyron.com>"
   ],
   "description": "A cellular automaton simulation library targeting WebAssembly.",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "license": "MIT OR Apache-2.0",
   "repository": {
     "type": "git",
