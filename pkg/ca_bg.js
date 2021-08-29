@@ -165,7 +165,7 @@ function passStringToWasm0(arg, malloc, realloc) {
     return ptr;
 }
 /**
-*r" A two-dimensional cellular automaton with a finite number of cells.
+* A two-dimensional cellular automaton with a finite number of cells.
 */
 export class Automaton {
 
@@ -353,7 +353,7 @@ export class Automaton {
     }
 }
 /**
-*r" A ruleset containing birth and survival (B/S) rules.
+* A ruleset containing birth and survival (B/S) rules.
 */
 export class RulesetBS {
 
@@ -474,7 +474,7 @@ export class RulesetBS {
     }
 }
 /**
-*r" A ruleset containing birth, survival, and generation (B/S/C) rules.
+* A ruleset containing birth, survival, and generation (B/S/C) rules.
 */
 export class RulesetBSC {
 
@@ -773,4 +773,3 @@ export function __wbindgen_memory() {
     var ret = wasm.memory;
     return addHeapObject(ret);
 };
-
