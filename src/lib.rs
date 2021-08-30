@@ -1,6 +1,6 @@
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
 
-//! A cellular automaton simulation library targeting `WebAssembly`.
+//! A cellular automaton simulation library with support for `WebAssembly`.
 
 mod automaton_life_like;
 mod rules;
@@ -12,6 +12,6 @@ pub use rules::{
     types::{BirthRule, GenerationRule, SurvivalRule},
 };
 
-#[cfg(feature = "wee_alloc")]
+#[cfg(target_arch = "wasm32")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;

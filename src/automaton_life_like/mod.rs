@@ -1,13 +1,13 @@
 //! Life-like cellular automata.
 
 use std::{cmp::Ordering, iter, mem};
-#[cfg(feature = "wasm-bindgen")]
+#[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::wasm_bindgen;
 
 use super::rules::bsc::RulesetBSC;
 
 cfg_if::cfg_if! {
-    if #[cfg(feature = "wasm-bindgen")] {
+    if #[cfg(target_arch = "wasm32")] {
         /// A two-dimensional cellular automaton with a finite number of cells.
         #[wasm_bindgen(inspectable)]
         #[derive(Clone, Debug, PartialEq, PartialOrd)]
@@ -34,7 +34,7 @@ cfg_if::cfg_if! {
     }
 }
 
-#[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 impl Automaton {
     /// Constructs a new automaton with all cell states set to 0. Defaults to rules
     /// from Conway's Game of Life.
@@ -44,10 +44,10 @@ impl Automaton {
     /// ```
     /// todo!();
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen(constructor))]
     #[must_use]
     pub fn new(rows: usize, cols: usize) -> Self {
-        #[cfg(feature = "console_error_panic_hook")]
+        #[cfg(all(feature = "console_error_panic_hook", target_arch = "wasm32"))]
         console_error_panic_hook::set_once();
 
         let neighbor_deltas = [
@@ -82,7 +82,7 @@ impl Automaton {
     /// ```
     /// todo!();
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(setter = cols, js_name = resizeWidth))]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen(setter = cols, js_name = resizeWidth))]
     pub fn resize_width(&mut self, width: usize) {
         match width.cmp(&self.cols) {
             Ordering::Greater => {
@@ -135,7 +135,7 @@ impl Automaton {
     /// ```
     /// todo!();
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(setter = rows, js_name = resizeHeight))]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen(setter = rows, js_name = resizeHeight))]
     pub fn resize_height(&mut self, height: usize) {
         self.cells.resize_with(self.cols * height, Default::default);
         self.cells.shrink_to_fit();
@@ -153,7 +153,7 @@ impl Automaton {
     /// ```
     /// todo!();
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = getCellsPtr))]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen(js_name = getCellsPtr))]
     #[must_use]
     pub fn cells_ptr(&self) -> *const i8 {
         self.cells.as_ptr()
@@ -166,7 +166,7 @@ impl Automaton {
     /// ```
     /// todo!();
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = toggleCell))]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen(js_name = toggleCell))]
     pub fn toggle_cell(&mut self, row: usize, col: usize) {
         let idx = self.index(row, col);
         if let Some(cell) = self.cells.get_mut(idx) {
@@ -187,7 +187,7 @@ impl Automaton {
     /// ```
     /// todo!();
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = setCellsOn))]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen(js_name = setCellsOn))]
     pub fn set_cells_on(&mut self, locations: &[usize]) {
         for (&row, &col) in locations
             .iter()
@@ -210,7 +210,7 @@ impl Automaton {
     /// ```
     /// todo!();
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = setAllCells))]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen(js_name = setAllCells))]
     pub fn set_all_cells(&mut self, n: i8) {
         if n <= self.rules.generation {
             self.cells.fill(n);
@@ -226,7 +226,7 @@ impl Automaton {
     /// ```
     /// todo!();
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(js_name = randomizeCells))]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen(js_name = randomizeCells))]
     pub fn randomize_cells(&mut self, n: f64) {
         for cell in &mut self.cells {
             *cell = if rand::random::<f64>() < n / 100.0 {
@@ -299,12 +299,17 @@ impl Automaton {
     }
 }
 
-#[cfg(all(test, target_arch = "wasm32"))]
+#[cfg(test)]
 mod tests {
     use super::*;
-    use wasm_bindgen_test::{wasm_bindgen_test, wasm_bindgen_test_configure};
 
-    wasm_bindgen_test_configure!(run_in_browser);
+    cfg_if::cfg_if! {
+        if #[cfg(target_arch = "wasm32")] {
+            use wasm_bindgen_test::{wasm_bindgen_test, wasm_bindgen_test_configure};
+
+            wasm_bindgen_test_configure!(run_in_browser);
+        }
+    }
 
     // flatten a slice of tuples that contain (x, y) locations of cells
     fn flatten_locations(locations: &[(usize, usize)]) -> Vec<usize> {
@@ -321,13 +326,15 @@ mod tests {
         a
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_new() {
         let a = Automaton::new(64, 64);
         assert_eq!(a.cells, vec![0; 64 * 64]);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_set_cells_on() {
         let mut a = Automaton::new(3, 3);
         a.set_cells_on(&flatten_locations(&[
@@ -344,14 +351,16 @@ mod tests {
         assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1, 1, 1, 1]);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_new_rect() {
         let mut a = Automaton::new(2, 3);
         a.set_cells_on(&flatten_locations(&[(1, 1)]));
         assert_eq!(a.cells, vec![0, 0, 0, 0, 1, 0]);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_set_all_cells() {
         let mut a = Automaton::new(3, 3);
         a.set_all_cells(1);
@@ -360,7 +369,8 @@ mod tests {
         assert_eq!(a.cells, vec![0, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_resize_width_larger() {
         let mut a = Automaton::new(3, 3);
         a.set_all_cells(1);
@@ -368,7 +378,8 @@ mod tests {
         assert_eq!(a.cells, vec![1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0]);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_resize_width_smaller() {
         let mut a = Automaton::new(3, 3);
         a.set_all_cells(1);
@@ -376,7 +387,8 @@ mod tests {
         assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1]);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_resize_height_larger() {
         let mut a = Automaton::new(3, 3);
         a.set_all_cells(1);
@@ -384,7 +396,8 @@ mod tests {
         assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_resize_height_smaller() {
         let mut a = Automaton::new(3, 3);
         a.set_all_cells(1);
@@ -392,7 +405,8 @@ mod tests {
         assert_eq!(a.cells, vec![1, 1, 1, 1, 1, 1]);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_wrapping() {
         let mut a = build_automaton(2, 2, &[(0, 0), (0, 1)]);
         let a_1 = build_automaton(2, 2, &[(0, 0), (0, 1)]);
@@ -401,7 +415,8 @@ mod tests {
         assert_eq!(a.cells, a_1.cells);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
+    #[cfg_attr(target_arch = "wasm32", wasm_bindgen_test)]
     fn automaton_step() {
         let mut a = build_automaton(6, 6, &[(1, 2), (2, 3), (3, 1), (3, 2), (3, 3)]);
         let a_1 = build_automaton(6, 6, &[(2, 1), (2, 3), (3, 2), (3, 3), (4, 2)]);
