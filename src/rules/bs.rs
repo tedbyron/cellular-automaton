@@ -1,10 +1,12 @@
-#[cfg(feature = "wasm-bindgen")]
+#[cfg(all(feature = "wasm-bindgen", target_arch = "wasm32"))]
 use wasm_bindgen::prelude::wasm_bindgen;
 
 use super::types::{BirthRule, GenerationRule, SurvivalRule};
 
+// expected non-macro attribute, found attribute macro `wasm_bindgen` not a
+// non-macro attribute
 cfg_if::cfg_if! {
-    if #[cfg(feature = "wasm-bindgen")] {
+    if #[cfg(all(feature = "wasm-bindgen", target_arch = "wasm32"))] {
         /// A ruleset containing birth and survival (B/S) rules.
         #[wasm_bindgen]
         #[derive(Clone, Debug, PartialEq, PartialOrd)]
@@ -26,7 +28,7 @@ cfg_if::cfg_if! {
     }
 }
 
-#[cfg_attr(feature = "wasm-bindgen", wasm_bindgen)]
+#[cfg_attr(all(feature = "wasm-bindgen", target_arch = "wasm32"), wasm_bindgen)]
 impl RulesetBS {
     /// Constructs a new ruleset containing birth, survival, and generation rules.
     ///
@@ -35,10 +37,13 @@ impl RulesetBS {
     /// ```
     /// todo!()
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(constructor))]
+    #[cfg_attr(
+        all(feature = "wasm-bindgen", target_arch = "wasm32"),
+        wasm_bindgen(constructor)
+    )]
     #[must_use]
     pub fn new(b: &[i8], s: &[i8]) -> Self {
-        #[cfg(feature = "console_error_panic_hook")]
+        #[cfg(all(feature = "console_error_panic_hook", target_arch = "wasm32"))]
         console_error_panic_hook::set_once();
 
         Self {
@@ -55,7 +60,7 @@ impl RulesetBS {
     /// ```
     /// todo!()
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(setter, js_name = setBirthRule))]
+    #[cfg_attr(all(feature = "wasm-bindgen", target_arch = "wasm32"), wasm_bindgen(setter, js_name = setBirthRule))]
     pub fn set_birth_rule(&mut self, b: &[i8]) {
         if b.iter().all(|n| (1..=8).contains(n)) {
             self.birth = b.to_vec();
@@ -69,7 +74,7 @@ impl RulesetBS {
     /// ```
     /// todo!()
     /// ```
-    #[cfg_attr(feature = "wasm-bindgen", wasm_bindgen(setter, js_name = setSurvivalRule))]
+    #[cfg_attr(all(feature = "wasm-bindgen", target_arch = "wasm32"), wasm_bindgen(setter, js_name = setSurvivalRule))]
     pub fn set_survival_rule(&mut self, s: &[i8]) {
         if s.iter().all(|n| (-1..=8).contains(n)) {
             self.survival = s.to_vec();
