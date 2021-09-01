@@ -11,9 +11,6 @@ keywords = ["wasm", "webassembly", "game-of-life", "cellular-automaton", "cellul
 categories = ["wasm", "games"]
 license = "MIT OR Apache-2.0"
 edition = "2018"
-exclude = [
-    "/pkg/",
-]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
