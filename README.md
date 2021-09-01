@@ -12,10 +12,6 @@
   </p>
 </div>
 
-- [1. Install](#1-install)
-- [2. Compile](#2-compile)
-- [3. Optimize](#3-optimize)
-
 ## 1. Install
 
 ```toml
