@@ -3,14 +3,12 @@
 //! A cellular automaton simulation library with support for `WebAssembly`.
 
 mod automaton_life_like;
-mod rules;
+mod rule;
+mod ruleset;
 
-pub use automaton_life_like::Automaton;
-pub use rules::{
-    bs::RulesetBS,
-    bsc::RulesetBSC,
-    types::{BirthRule, GenerationRule, SurvivalRule},
-};
+pub use automaton_life_like::*;
+pub use rule::*;
+pub use ruleset::*;
 
 #[cfg(target_arch = "wasm32")]
 #[global_allocator]

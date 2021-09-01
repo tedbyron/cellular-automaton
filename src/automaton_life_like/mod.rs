@@ -4,7 +4,7 @@ use std::{cmp::Ordering, iter, mem};
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::wasm_bindgen;
 
-use super::rules::bsc::RulesetBSC;
+use crate::ruleset;
 
 cfg_if::cfg_if! {
     if #[cfg(target_arch = "wasm32")] {
@@ -14,10 +14,10 @@ cfg_if::cfg_if! {
         pub struct Automaton {
             rows: usize,
             cols: usize,
-            cells: Vec<i8>,
-            cells_step: Vec<i8>,
+            cells: Vec<u8>,
+            cells_step: Vec<u8>,
             #[wasm_bindgen(getter_with_clone)]
-            pub rules: RulesetBSC,
+            pub rules: ruleset::BSC,
             neighbor_deltas: [[usize; 2]; 8],
         }
     } else {
@@ -26,9 +26,9 @@ cfg_if::cfg_if! {
         pub struct Automaton {
             rows: usize,
             cols: usize,
-            cells: Vec<i8>,
-            cells_step: Vec<i8>,
-            pub rules: RulesetBSC,
+            cells: Vec<u8>,
+            cells_step: Vec<u8>,
+            pub rules: ruleset::BSC,
             neighbor_deltas: [[usize; 2]; 8],
         }
     }
@@ -47,7 +47,7 @@ impl Automaton {
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(constructor))]
     #[must_use]
     pub fn new(rows: usize, cols: usize) -> Self {
-        #[cfg(all(feature = "console_error_panic_hook", target_arch = "wasm32"))]
+        #[cfg(all(debug_assertions, target_arch = "wasm32"))]
         console_error_panic_hook::set_once();
 
         let neighbor_deltas = [
@@ -66,7 +66,7 @@ impl Automaton {
             cols,
             cells: vec![0; cols * rows],
             cells_step: vec![0; cols * rows],
-            rules: RulesetBSC::default(),
+            rules: ruleset::BSC::default(),
             neighbor_deltas,
         }
     }
@@ -155,7 +155,7 @@ impl Automaton {
     /// ```
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(js_name = getCellsPtr))]
     #[must_use]
-    pub fn cells_ptr(&self) -> *const i8 {
+    pub fn cells_ptr(&self) -> *const u8 {
         self.cells.as_ptr()
     }
 
@@ -211,7 +211,7 @@ impl Automaton {
     /// todo!();
     /// ```
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(js_name = setAllCells))]
-    pub fn set_all_cells(&mut self, n: i8) {
+    pub fn set_all_cells(&mut self, n: u8) {
         if n <= self.rules.generation {
             self.cells.fill(n);
         }
@@ -243,23 +243,28 @@ impl Automaton {
     /// ```
     /// todo!();
     /// ```
-    pub fn step(&mut self, n: usize) {
-        for _ in 0..n {
-            for row in 0..self.rows {
-                for col in 0..self.cols {
-                    let idx = self.index(row, col);
+    pub fn step(&mut self) {
+        for row in 0..self.rows {
+            for col in 0..self.cols {
+                let idx = self.index(row, col);
 
-                    self.cells_step[idx] = match (self.cells[idx], self.neighbors(row, col)) {
-                        (0, n) => self.rules.birth.contains(&n).into(),
-                        (1, n) if self.rules.survival.contains(&n) => 1,
-                        (s, _) if s < self.rules.generation => s + 1,
-                        _ => 0,
+                // TODO: only modify cells that change
+                // TODO: get all neighbor counts first and only update cells with state > 0 or neighbors
+                self.cells_step[idx] = match (self.cells[idx], self.neighbors(row, col)) {
+                    (0, n) => self.rules.birth.contains(&n) as u8,
+                    (1, n) => self.rules.survival.contains(&n) as u8,
+                    (s, _) => {
+                        if s < self.rules.generation {
+                            s + 1
+                        } else {
+                            0
+                        }
                     }
                 }
             }
-
-            mem::swap(&mut self.cells, &mut self.cells_step);
         }
+
+        mem::swap(&mut self.cells, &mut self.cells_step);
     }
 
     // Returns the index of a cell in the automaton.
@@ -268,7 +273,7 @@ impl Automaton {
     }
 
     // Returns the count of a cell's live, first-generation neighbors.
-    fn neighbors(&self, row: usize, col: usize) -> i8 {
+    fn neighbors(&self, row: usize, col: usize) -> u8 {
         self.neighbor_deltas
             .iter()
             .fold(0, |count, &[row_delta, col_delta]| {
@@ -411,7 +416,7 @@ mod tests {
         let mut a = build_automaton(2, 2, &[(0, 0), (0, 1)]);
         let a_1 = build_automaton(2, 2, &[(0, 0), (0, 1)]);
 
-        a.step(1);
+        a.step();
         assert_eq!(a.cells, a_1.cells);
     }
 
@@ -421,7 +426,7 @@ mod tests {
         let mut a = build_automaton(6, 6, &[(1, 2), (2, 3), (3, 1), (3, 2), (3, 3)]);
         let a_1 = build_automaton(6, 6, &[(2, 1), (2, 3), (3, 2), (3, 3), (4, 2)]);
 
-        a.step(1);
+        a.step();
         assert_eq!(a.cells, a_1.cells);
     }
 }
